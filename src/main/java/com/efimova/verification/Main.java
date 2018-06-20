@@ -1,5 +1,6 @@
 package com.efimova.verification;
 
+import com.efimova.verification.automaton.Automaton;
 import com.efimova.verification.diagram.Diagram;
 import com.efimova.verification.diagram.DiagramParser;
 import com.efimova.verification.ltl.Formula;
@@ -20,5 +21,8 @@ public class Main {
         DiagramParser diagramService = new DiagramParser();
         Diagram diagram = diagramService.parseDiagram(diagramXmlFile);
         System.out.println(diagram.toString());
+
+        Automaton automaton = diagram.toAutomaton();
+        System.out.println(automaton.toString());
     }
 }

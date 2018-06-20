@@ -3,12 +3,14 @@ package com.efimova.verification.automaton;
 import com.efimova.verification.ltl.Formula;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.*;
 
 
 @Data
 @EqualsAndHashCode
+@ToString
 public class Automaton {
     private int initialState;
     private Set<Integer> nodes = new HashSet<>();
