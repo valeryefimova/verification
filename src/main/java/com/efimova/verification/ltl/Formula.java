@@ -1,15 +1,27 @@
 package com.efimova.verification.ltl;
 
 import com.efimova.verification.LtlVisitor;
+import com.efimova.verification.automaton.Automaton;
+import com.efimova.verification.automaton.State;
+import com.efimova.verification.automaton.Transition;
+import com.efimova.verification.automaton.generated.BuchiLexer;
+import com.efimova.verification.automaton.generated.BuchiParser;
 import lombok.SneakyThrows;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+
+import static com.efimova.verification.ltl.Utils.trueConst;
 
 
 public abstract class Formula {
@@ -18,7 +30,7 @@ public abstract class Formula {
     public abstract void accept(LtlVisitor visitor);
 
 
-    public String ltlToAutomaton() {
+    public Automaton ltlToAutomaton() {
         Map<String, String> oldToNeNamesMap = new HashMap<>();
 
         // replace all names with vX, where x is a number:
@@ -27,7 +39,47 @@ public abstract class Formula {
 
         // replace Release to V in orders to comply spin syntax:
         String spinSyntaxFormula = lowercaseLTL.toString().replace("R", "V");
-        return spinLtlToBA(spinSyntaxFormula);
+        return ltlToAutomaton(spinSyntaxFormula);
+    }
+
+    private Automaton ltlToAutomaton(String ltl) {
+        String buchiAutomaton = spinLtlToBA(ltl);
+
+        CharStream in = CharStreams.fromString(buchiAutomaton);
+        BuchiLexer lexer = new BuchiLexer(in);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        BuchiParser parser = new BuchiParser(tokens);
+        List<State> states = parser.automaton().list;
+
+        AtomicInteger ids = new AtomicInteger();
+        Map<String, Integer> idMap = new HashMap<>();
+        Automaton automaton = new Automaton();
+        for (State state : states) {
+            int nodeId = idMap.computeIfAbsent(state.getName(), k -> ids.getAndIncrement());
+            if (state.isAccept()) {
+                automaton.addAccepting(nodeId);
+            }
+            if (state.isInit()) {
+                automaton.setInitialState(nodeId);
+            }
+            for (Transition transition : state.getTransitions()) {
+                int nextId = idMap.computeIfAbsent(transition.getStateName(), k -> ids.getAndIncrement());
+                Formula formula = transition.getExpression();
+                automaton.addTransition(nodeId, nextId, formula);
+                if (transition.isAccept()) {
+                    automaton.addAccepting(nextId);
+                }
+                if (transition.isInit()) {
+                    automaton.setInitialState(nextId);
+                }
+            }
+        }
+        for (int nodeId : automaton.getNodes()) {
+            if (automaton.getTransitionsMap(nodeId).isEmpty()) {
+                automaton.addTransition(nodeId, nodeId, trueConst());
+            }
+        }
+        return automaton;
     }
 
 

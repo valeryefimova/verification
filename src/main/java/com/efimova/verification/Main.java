@@ -15,7 +15,7 @@ public class Main {
         LtlFormulaParser parser = new LtlFormulaParser();
         Formula formula = parser.parse(ltlFormulaString);
         System.out.println(formula.toString());
-        System.out.println(formula.ltlToAutomaton());
+        System.out.println(formula.ltlToAutomaton().toString());
 
         System.out.println();
 
