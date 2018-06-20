@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.*;
+import java.util.function.Function;
 
 
 @Data
@@ -36,5 +37,29 @@ public class Automaton {
 
     public boolean accepts(int state) {
         return acceptingSet.contains(state);
+    }
+
+
+    /**
+     * Renames all variables in transition formulas and created a new automaton.
+     * @param mapper mapper function for renaming variables
+     * @return a new automaton where transition formulas have new variables
+     */
+    public Automaton withRenamedTransitions(Function<Formula, Formula> mapper) {
+        Automaton automaton = new Automaton();
+
+        transitions.forEach((nodeId, successors) -> {
+            successors.forEach((transitionFormula, value) -> {
+                // rename all variables in the formula according to the given mapper:
+                Formula newFormula = mapper.apply(transitionFormula);
+                for (int targetId : value) {
+                    automaton.addTransition(nodeId, targetId, newFormula);
+                }
+            });
+        });
+
+        acceptingSet.forEach(automaton::addAccepting);
+        automaton.setInitialState(initialState);
+        return automaton;
     }
 }

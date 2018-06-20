@@ -39,8 +39,16 @@ public abstract class Formula {
 
         // replace Release to V in orders to comply spin syntax:
         String spinSyntaxFormula = lowercaseLTL.toString().replace("R", "V");
-        return ltlToAutomaton(spinSyntaxFormula);
+
+        Map<String, String> newToOldNamesMap = new HashMap<>();
+        for (Map.Entry<String, String> entry : oldToNeNamesMap.entrySet()) {
+            newToOldNamesMap.put(entry.getValue(), entry.getKey());
+        }
+
+        Automaton automaton = ltlToAutomaton(spinSyntaxFormula);
+        return automaton.withRenamedTransitions(t -> t.transformName(newToOldNamesMap::get));
     }
+
 
     private Automaton ltlToAutomaton(String ltl) {
         String buchiAutomaton = spinLtlToBA(ltl);
