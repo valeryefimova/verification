@@ -1,0 +1,5 @@
+'S(state0)'
+F('S(SName)' | 'S(ID)')
+G('S(SName)' | !'S(SName)')
+X('E(name)' | 'E(id)')
+true

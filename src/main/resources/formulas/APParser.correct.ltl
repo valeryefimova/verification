@@ -1,0 +1,10 @@
+F('S(MachineType)')
+F('S(MachineName)')
+F('S(MachineType)' -> 'S(MachineName)')
+'S(FirstPartArrow)' R !'E(see_operator)'
+F('S(FirstPartArrow)' R (!'E(see_operator)'))
+F('E(vertical_line)' -> 'S(Vert)' & 'E(vertical_line)' -> 'S(Vert)' )
+G(! (X 'S(state0)'))
+!'E(see_operator)'
+F( G !'E(see_operator)')
+F('E(see_minus)' | 'E(vertical_line)' | 'E(dot)')

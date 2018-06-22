@@ -1,0 +1,6 @@
+G ('E(machine_type)' -> X G('E(machine_type)' -> X 'S(NameWithArrow)'))
+G('S(FunctionFound)' -> F('A(WriteFunctionProposition)'))
+'S(FunctionFound)' R !'S(FunctionFound)'
+G(X 'S(MachineType)' -> 'S(MachineName)' )
+G(! (F 'S(MachineType)'))
+G ('S(MachineName)' -> ('E(see_minus)' | 'E(vertical_line)' | 'E(dot)'))

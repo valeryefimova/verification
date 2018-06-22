@@ -1,0 +1,6 @@
+G'S(SName)'
+G'Ivalid'
+F 'E(Number)'
+F ('E(Number)' R !'S(ID)')
+X X X X X ('S(state0)')
+F(X X X X X ('S(state0)'))
