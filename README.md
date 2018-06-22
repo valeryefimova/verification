@@ -3,7 +3,19 @@
 ## Simple ltl formula verificator 
 Checks LTL formulas against given models.
 
+See the detailed description [here](https://docs.google.com/document/d/1nUaRnyy4cL5SgwDCfFBZLZiXETVISTsDWTk6-gUnEsk/edit)
 
+## Usage:
+```
+java -jar verification.jar <mode: batch|single> <ltl: formula or file.ltl> <automaton.xstd> <result.out>
+```
+Application has 4 required args:
+ - mode: either ``batch`` (for processing file) or ``single`` (for one ltl formula)
+ - ltl: either single ltl-formula to be verified or path to file with ltl-formulas
+ - automaton.xstd: file with automaton for ltl-formula to be checked on
+ - result.out: file for verification result to be written into
+ 
+ 
 ## ltl2ba
 Ltl2ba library used to convert LTL formula to Buchi Automaton.
 
