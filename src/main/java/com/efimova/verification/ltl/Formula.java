@@ -95,7 +95,7 @@ public abstract class Formula {
     private String spinLtlToBA(String ltl) {
         String cygwinBash = "C:\\lib\\cygwin64\\bin\\bash.exe";
         String ltl2baExecutable = "ltl2ba/ltl2ba.exe";
-        String configFile = "src/main/resources/config.properties";
+        String configFile = "config";
 
         BufferedReader reader = new BufferedReader(new FileReader(configFile));
         String s = reader.readLine();
